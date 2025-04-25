@@ -2,12 +2,41 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Live Football Streams</title>
+  <title>Live Football Events</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="header">⚽ Live Football Streams</div>
-  <div id="match-list" class="match-list">Loading matches...</div>
-  <script src="script.js"></script>
+  <h1>Live Events</h1>
+  <div id="match-grid" class="grid"></div>
+
+  <script>
+    async function loadEvents() {
+      const proxy = "https://api.allorigins.win/raw?url=";
+      const apiUrl = "https://api.streamed.su/api/matches/all";
+      const res = await fetch(proxy + encodeURIComponent(apiUrl));
+      const data = await res.json();
+
+      const grid = document.getElementById("match-grid");
+      grid.innerHTML = "";
+
+      data.forEach(match => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <h3>${match.title}</h3>
+          <button onclick="watch('${match.id}', ${encodeURIComponent(JSON.stringify(match.sources))})">Watch</button>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function watch(id, sources) {
+      localStorage.setItem("matchId", id);
+      localStorage.setItem("sources", sources);
+      window.location.href = "select-source.html";
+    }
+
+    loadEvents();
+  </script>
 </body>
 </html>
