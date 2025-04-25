@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Watch Stream</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="header">📺 Now Watching</div>
+  <div id="stream-container" class="stream-container">Loading stream...</div>
+  <script>
+    async function loadStream() {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get("id");
+      const source = params.get("source");
+
+      const res = await fetch(`https://api.streamed.su/api/stream/${source}/${id}`);
+      const data = await res.json();
+      
+      document.getElementById("stream-container").innerHTML = `
+        <iframe src="${data.embedUrl}" frameborder="0" allowfullscreen></iframe>
+      `;
+    }
+
+    loadStream();
+  </script>
+</body>
+</html>
