@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Select Source</title>
+</head>
+<body>
+  <h2>Select a Source</h2>
+  <div id="source-list"></div>
+
+  <script>
+    const matchId = localStorage.getItem("matchId");
+    const sources = JSON.parse(decodeURIComponent(localStorage.getItem("sources")));
+
+    const container = document.getElementById("source-list");
+
+    sources.forEach(src => {
+      const btn = document.createElement("button");
+      btn.textContent = `Source: ${src.source}`;
+      btn.onclick = () => {
+        localStorage.setItem("selectedSource", src.source);
+        localStorage.setItem("sourceId", src.id);
+        window.location.href = "select-stream.html";
+      };
+      container.appendChild(btn);
+    });
+  </script>
+</body>
+</html>
