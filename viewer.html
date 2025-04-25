@@ -2,46 +2,19 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Watch Stream</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Stream Viewer</title>
 </head>
 <body>
-  <div class="header">📺 Now Watching</div>
-  <div id="stream-container" class="stream-container">Loading stream...</div>
+  <h1>Now Watching</h1>
+  <div id="player"></div>
+
   <script>
-    async function loadStream() {
-      const params = new URLSearchParams(window.location.search);
-      const id = params.get("id");
-      const source = params.get("source");
+    const urlParams = new URLSearchParams(window.location.search);
+    const embedUrl = urlParams.get("embed");
 
-      if (!id || !source) {
-        document.getElementById("stream-container").innerText = "Invalid stream link.";
-        console.error("Missing ID or source in URL");
-        return;
-      }
-
-      const apiUrl = `https://api.streamed.su/api/stream/${source}/${id}`;
-      const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(apiUrl);
-
-      console.log("Fetching stream from:", proxyUrl);
-
-      try {
-        const res = await fetch(proxyUrl);
-        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-        const data = await res.json();
-        console.log("Stream data:", data);
-
-        document.getElementById("stream-container").innerHTML = `
-          <iframe src="${data.embedUrl}" frameborder="0" allowfullscreen></iframe>
-        `;
-      } catch (err) {
-        console.error("Failed to load stream:", err);
-        document.getElementById("stream-container").innerText =
-          "⚠️ Failed to load stream. Check console for details.";
-      }
-    }
-
-    loadStream();
+    document.getElementById("player").innerHTML = `
+      <iframe src="${embedUrl}" width="100%" height="600" frameborder="0" allowfullscreen></iframe>
+    `;
   </script>
 </body>
 </html>
