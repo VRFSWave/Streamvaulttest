@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Select Stream</title>
+</head>
+<body>
+  <h2>Choose Stream</h2>
+  <div id="stream-list">Loading...</div>
+
+  <script>
+    async function loadStreams() {
+      const source = localStorage.getItem("selectedSource");
+      const id = localStorage.getItem("sourceId");
+      const proxy = "https://api.allorigins.win/raw?url=";
+      const apiUrl = `https://api.streamed.su/api/stream/${source}/${id}`;
+      const res = await fetch(proxy + encodeURIComponent(apiUrl));
+      const data = await res.json();
+
+      const container = document.getElementById("stream-list");
+      container.innerHTML = "";
+
+      data.forEach(stream => {
+        const btn = document.createElement("button");
+        btn.textContent = `Stream ${stream.streamNo} (${stream.language}, ${stream.hd ? "HD" : "SD"})`;
+        btn.onclick = () => {
+          window.location.href = `viewer.html?embed=${encodeURIComponent(stream.embedUrl)}`;
+        };
+        container.appendChild(btn);
+      });
+    }
+
+    loadStreams();
+  </script>
+</body>
+</html>
